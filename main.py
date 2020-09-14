@@ -18,3 +18,5 @@ while not match:
         "window.scrollTo(0, document.body.scrollHeight);var lenOfPage=document.body.scrollHeight;return lenOfPage;")
     if lastCount == lenOfPage:
         match = True
+
+driver.close()
