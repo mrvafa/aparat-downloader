@@ -8,7 +8,7 @@ import urllib.parse
 import requests
 
 BASE = 'https://www.aparat.com'
-GECKODRIVER_PATH = '/home/mrvafa/Driver/geckodriver'
+GECKODRIVER_PATH = '<your-path-to-selenium-driver>'
 
 
 def get_download_link_from_video_page(video_page_url):
