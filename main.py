@@ -53,12 +53,14 @@ for video_section in list_of_channel_videos:
     if 'href' in str(link):
         video_link_pages.append(urllib.parse.urljoin(BASE, link['href']))
 
-file = open('output.txt', 'w')
-
+links = []
 for video_link_page in video_link_pages:
     link = get_download_link_from_video_page(video_link_page)
-
     if link:
-        file.write(f'{link}\n')
+        links.append(link)
+
+with open('links.json', 'w') as f:
+    if links:
+        json.dump(links, f)
 
 driver.close()
