@@ -1,3 +1,5 @@
+import argparse
+import json
 import time
 
 from bs4 import BeautifulSoup
@@ -7,7 +9,6 @@ import requests
 
 BASE = 'https://www.aparat.com'
 GECKODRIVER_PATH = '/home/mrvafa/Driver/geckodriver'
-url = 'https://www.aparat.com/jadi/videos'
 
 
 def get_download_link_from_video_page(video_page_url):
@@ -16,12 +17,21 @@ def get_download_link_from_video_page(video_page_url):
         video_page_soup = BeautifulSoup(res.text, 'html.parser')
         span_download_links = video_page_soup.find_all('li', attrs={'class': 'menu-item-link link'})
         a_download_link = span_download_links[len(span_download_links) - 1].find('a')
+        h1_title = video_page_soup.find('h1', attrs={'id': 'videoTitle'}).text
         if 'href' in str(a_download_link):
-            return a_download_link['href']
+            return {
+                'title': h1_title,
+                'url': a_download_link['href'],
+            }
 
     else:
         print(f'Error while getting {video_page_url} {res.text}')
 
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-n', '--name', help='Enter channel name', required=True)
+args = parser.parse_args()
+url = f'{BASE}/{args.name}/videos'
 
 driver = webdriver.Firefox(executable_path=GECKODRIVER_PATH)
 driver.get(url)
