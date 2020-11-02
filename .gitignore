@@ -144,3 +144,5 @@ dmypy.json
 .idea
 .*swp
 *.txt
+*.json
+output
