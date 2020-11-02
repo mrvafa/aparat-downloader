@@ -1,37 +1,31 @@
+import argparse
+import json
 import os
-import sys
 import urllib.parse
 import urllib.request
 
 
-def get_name_from_url(url):
-    url = url[url.rfind('/') + 1:]
-    return urllib.parse.unquote(url)
-
-
-def download_url(url, output_dir=''):
-    output_dir = os.path.abspath(output_dir)
-    url_head = url[:url.find('//')]
-    url_body = urllib.parse.unquote(url[url.find('//'):])
-    url = url_head + urllib.parse.quote(url_body)
-    download_name = get_name_from_url(url)
-    output = os.path.join(output_dir, download_name) if output_dir else download_name
+def download_url(_url, _name, output_dir=''):
+    output = os.path.join(output_dir, _name)
     if not os.path.isfile(output):
-        urllib.request.urlretrieve(url, filename=output)
+        urllib.request.urlretrieve(_url, filename=output)
     return output
 
 
-if not os.path.isdir('output'):
-    os.mkdir('output')
+parser = argparse.ArgumentParser()
+parser.add_argument('-f', '--filepath', help='Enter the Filepath to file contains with links', required=True)
+args = parser.parse_args()
+filepath = args.filepath
+file = open(filepath, 'r')
 
-if not os.path.isfile('output.txt'):
-    print('output.txt not found')
-    sys.exit(1)
+with open(filepath) as f:
+    links = json.load(f)
 
-file = open('output.txt', 'r')
-
-for line in file.readlines():
-    line = line.strip()
-    download_url(line, output_dir='output')
+for link in links:
+    name = link['title']
+    url = link['url']
+    print(f'Downloading {name} from {url}.')
+    download_url(url, name, 'output')
+    print(f'Finished Downloading {name} from {url}.')
 
 print('DONE!')
